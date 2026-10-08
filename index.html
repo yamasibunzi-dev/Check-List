@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Checkers | Mr &amp; Mrs Sibunzi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&amp;family=Great+Vibes&amp;family=Cinzel:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{--red:#b3121f;--dred:#7d0c16;--cream:#f6e9d2;--paper:#fbf3e3;--ink:#2a1511;--gold:#c9a15a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cormorant Garamond',serif;background:var(--cream);color:var(--ink);font-size:20px}
+.script{font-family:'Great Vibes',cursive;color:var(--red)}
+.pattern{height:22px;background:repeating-linear-gradient(135deg,var(--red) 0 8px,var(--paper) 8px 12px,var(--ink) 12px 16px,var(--paper) 16px 20px)}
+header{text-align:center;padding:34px 16px 6px}
+header h1{font-size:clamp(56px,13vw,92px);font-weight:400;animation:drop .9s}
+header p{font-family:'Cinzel';letter-spacing:.2em;font-size:12px;opacity:.7}
+@keyframes drop{from{opacity:0;transform:translateY(-24px)}}
+.wrap{max-width:980px;margin:auto;padding:20px 16px 60px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:700px){.cols{grid-template-columns:1fr}}
+.col{background:var(--paper);border:2px solid var(--gold);border-radius:16px;padding:16px}
+.col h2{font-family:'Cinzel';color:var(--red);font-size:17px;letter-spacing:.12em;text-align:center;padding-bottom:8px;border-bottom:2px solid var(--gold)}
+.col h2 small{display:block;font:italic 16px 'Cormorant Garamond';color:var(--ink);letter-spacing:0;margin-top:2px}
+.p{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:12px 4px;border-bottom:1px dotted var(--gold);animation:in .5s}
+@keyframes in{from{opacity:0;transform:translateY(10px)}}
+.p b{display:block;font-size:20px}
+.p small{font-size:16px;opacity:.8}
+.acts{display:flex;gap:8px}
+.btn{font-family:'Cinzel';letter-spacing:.08em;border:2px solid var(--red);background:var(--red);color:var(--cream);padding:8px 16px;border-radius:30px;cursor:pointer;font-size:12px;transition:.25s}
+.btn:hover{transform:scale(1.07);background:var(--dred)}
+.btn.alt{background:transparent;color:var(--red)}
+.btn.alt:hover{background:var(--red);color:var(--cream)}
+.tag{font-family:'Cinzel';font-size:11px;letter-spacing:.1em;padding:3px 9px;border-radius:20px;margin-left:6px;vertical-align:middle}
+.tag.w{background:#e8d5ae;color:var(--dred)}
+.empty{text-align:center;opacity:.55;padding:18px 0;font-style:italic}
+h2.t{font-size:clamp(44px,10vw,64px);font-weight:400;text-align:center;margin:40px 0 6px}
+#q{width:100%;padding:12px 16px;border:2px solid var(--gold);border-radius:30px;font:inherit;background:#fff;outline:none;margin:10px 0 14px}
+#q:focus{border-color:var(--red)}
+.u{background:var(--paper);border:1px solid var(--gold);border-radius:12px;padding:12px 14px;margin-bottom:8px;animation:in .5s}
+.u .nm{font-size:21px;font-weight:700}
+.u .nm.click{cursor:pointer;color:var(--dred)}
+.u .nm.click:after{content:" \25BE";font-size:14px}
+.u.open .nm.click:after{content:" \25B4"}
+.u small{display:block;font-size:16px;opacity:.8}
+.rsn{display:none;margin-top:8px;padding:10px 12px;background:#fff;border-left:4px solid var(--red);border-radius:6px;font-size:18px}
+.u.open .rsn{display:block;animation:in .35s}
+.rose{display:inline-block;margin-right:6px}
+.rose.g{filter:hue-rotate(115deg) saturate(1.4)}
+.rose.d{filter:grayscale(.2) brightness(.85)}
+.ov{position:fixed;inset:0;background:#2a1511cc;z-index:200;display:none;align-items:center;justify-content:center;padding:14px}
+.ov.on{display:flex}
+.modal{background:var(--paper);border:3px solid var(--gold);border-radius:18px;width:min(94vw,440px);padding:28px 22px;text-align:center;animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.modal h3{font-family:'Cinzel';color:var(--red);font-size:18px;line-height:1.5;margin-bottom:14px}
+.row{display:flex;gap:10px;justify-content:center;margin-top:14px}
+#rs{display:none;text-align:left;margin-top:10px;animation:in .4s}
+#rs label{font-weight:700;display:block;margin-bottom:4px}
+#rs textarea{width:100%;height:90px;padding:10px;border:2px solid var(--gold);border-radius:8px;font:inherit;resize:vertical;outline:none}
+#rs textarea:focus{border-color:var(--red)}
+.err{color:var(--red);font-size:16px;min-height:20px;margin-top:6px}
+#msg{text-align:center;color:var(--red);min-height:24px}
+#login{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 50% 40%,#9a1220,#4a0910 75%)}
+#login.off{display:none}
+.lbox{background:var(--paper);border:3px solid var(--gold);border-radius:20px;width:min(94vw,380px);padding:30px 24px;text-align:center;animation:pop .6s cubic-bezier(.2,1.4,.4,1)}
+.lbox h1{font-size:64px;font-weight:400;line-height:1}
+.lbox p{font-family:'Cinzel';font-size:11px;letter-spacing:.2em;opacity:.7;margin:6px 0 18px}
+.lbox input{width:100%;padding:12px 14px;border:2px solid var(--gold);border-radius:30px;font:inherit;background:#fff;outline:none;margin-bottom:10px;text-align:center}
+.lbox input:focus{border-color:var(--red)}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+#app{display:none}
+#app.on{display:block}
+.out{position:absolute;right:14px;top:36px}
+</style>
+</head>
+<body>
+<!-- LOGIN SCREEN (username and password are both: admin12304 - see the JavaScript at the bottom to change) -->
+<div id="login"><div class="lbox">
+  <h1 class="script">Checkers</h1>
+  <p>PLEASE LOG IN</p>
+  <input id="lu" placeholder="Username" autocomplete="username">
+  <input id="lp" type="password" placeholder="Password" autocomplete="current-password">
+  <div class="err" id="le"></div>
+  <button class="btn" id="lgo">Log in</button>
+</div></div>
+
+<div id="app">
+<div class="pattern"></div>
+<header>
+  <button class="btn alt out" id="logout">Log out</button>
+  <h1 class="script">Checkers</h1>
+  <p>MR &amp; MRS SIBUNZI &middot; WELCOMING OF UMAKOTI</p>
+</header>
+
+<div class="wrap">
+  <div id="msg"></div>
+  <div class="cols">
+    <div class="col"><h2>GROOM<small id="gc"></small></h2><div id="g"></div></div>
+    <div class="col"><h2>BRIDE<small id="bc"></small></h2><div id="b"></div></div>
+  </div>
+
+  <h2 class="script t">Updates</h2>
+  <input id="q" placeholder="Search by name or number...">
+  <div id="ups"></div>
+</div>
+<div class="pattern"></div>
+</div>
+
+<!-- POP-UP for Decline / Remove -->
+<div class="ov" id="ov"><div class="modal">
+  <h3 id="qt"></h3>
+  <div class="row" id="yn"><button class="btn" id="yes">Yes</button><button class="btn alt" id="no">No</button></div>
+  <div id="rs">
+    <label>Reason?</label>
+    <textarea id="reason" placeholder="Please type why this person is being removed..."></textarea>
+    <div class="err" id="err"></div>
+    <div class="row"><button class="btn" id="submit">Submit</button><button class="btn alt" id="back">Back</button></div>
+  </div>
+</div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>
+/* Loads firebase-config.js and store.js from the main folder (../) - or from this same folder if that is where they are */
+function loadJs(src){return new Promise((ok,no)=>{const t=document.createElement('script');t.src=src;t.onload=ok;t.onerror=()=>{t.remove();no()};document.head.appendChild(t)})}
+window.depsReady=(async()=>{for(const f of ['firebase-config.js','store.js']){try{await loadJs('../'+f)}catch(e){try{await loadJs(f)}catch(e2){}}}})();
+</script>
+<script>
+const $=s=>document.querySelector(s);
+const MAX=50;   /* slots per side - same number as in index.html */
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let all=[],target=null,openIds=new Set(),busy=false;
+
+function start(){Store.watchAll(list=>{all=list;$('#msg').textContent=window.StoreMode==='local'?'TEST MODE: Firebase is not connected, so this list only works inside this browser.':'';draw()},e=>{
+  console.error(e);$('#msg').textContent='Could not load the list: '+(e&&e.message?e.message:'check your Firestore rules')})}
+
+function when(t){return new Date(t).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+
+function draw(){
+  for(const [side,id,cid] of [['groom','#g','#gc'],['bride','#b','#bc']]){
+    const act=all.filter(x=>x.side===side&&(x.status==='pending'||x.status==='accepted'));
+    const acc=act.filter(x=>x.status==='accepted').length;
+    $(cid).textContent=acc+' of '+MAX+' accepted';
+    $(id).innerHTML=act.length?act.map(x=>`<div class="p"><div><b>${esc(x.name)}${x.status==='pending'?'<span class="tag w">NEW</span>':''}</b><small>&#128222; ${esc(x.phone)||'No number given'}</small></div>
+      <div class="acts">${x.status==='pending'
+        ?`<button class="btn" data-a="accept" data-id="${x.id}">Accept</button><button class="btn alt" data-a="declined" data-id="${x.id}">Decline</button>`
+        :`<button class="btn alt" data-a="removed" data-id="${x.id}">Remove</button>`}</div></div>`).join('')
+      :'<div class="empty">Nobody yet</div>';
+  }
+  const term=$('#q').value.trim().toLowerCase();
+  const rows=all.filter(x=>!term||(x.name+' '+(x.phone||'')).toLowerCase().includes(term));
+  $('#ups').innerHTML=rows.length?rows.map(x=>{
+    const gone=x.status==='declined'||x.status==='removed';
+    const rose=x.status==='accepted'?'<span class="rose g">&#127801;</span>':gone?'<span class="rose d">&#129344;</span>':'<span class="rose">&#9203;</span>';
+    const word={accepted:'Accepted',declined:'Declined',removed:'Removed',pending:'Waiting'}[x.status]||x.status;
+    return `<div class="u ${openIds.has(x.id)?'open':''}">
+      <div class="nm ${gone?'click':''}" ${gone?`data-t="${x.id}"`:''}>${rose}${esc(x.name)}</div>
+      <small>&#128222; ${esc(x.phone)||'No number'} &nbsp;&middot;&nbsp; ${x.side==='groom'?"Groom's side":"Bride's side"} &nbsp;&middot;&nbsp; ${word}</small>
+      <small>${when(x.t)}</small>
+      ${gone?`<div class="rsn"><b>Reason:</b> ${esc(x.reason)||'No reason given'}</div>`:''}</div>`}).join('')
+    :'<div class="empty">No results</div>';
+}
+$('#q').oninput=draw;
+
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-a]'),t=e.target.closest('[data-t]');
+  if(t){const id=t.dataset.t;openIds.has(id)?openIds.delete(id):openIds.add(id);draw();return}
+  if(!b)return;
+  const id=b.dataset.id,a=b.dataset.a;
+  if(a==='accept'){try{await Store.setStatus(id,'accepted')}catch(x){console.error(x);alert('Sorry, that did not save. Please try again.')}return}
+  target={id,kind:a};
+  $('#qt').innerHTML=(a==='declined'?'Are you sure?<br>':'')+'Do you wish to remove this person &#128546;';
+  $('#yn').style.display='flex';$('#rs').style.display='none';
+  $('#reason').value='';$('#err').textContent='';
+  $('#ov').classList.add('on');
+});
+const close=()=>{$('#ov').classList.remove('on');target=null};
+$('#no').onclick=close;
+$('#back').onclick=close;
+$('#yes').onclick=()=>{$('#yn').style.display='none';$('#rs').style.display='block';$('#reason').focus()};
+$('#submit').onclick=async()=>{
+  const r=$('#reason').value.trim();
+  if(!r)return $('#err').textContent='Please add a reason before submitting.';
+  if(busy||!target)return;
+  busy=true;
+  try{await Store.setStatus(target.id,target.kind,r);close()}
+  catch(x){console.error(x);$('#err').textContent='Sorry, that did not save. Please try again.'}
+  busy=false;
+};
+
+/* ---------- LOGIN ----------
+   To change the username/password edit the two words below. */
+const USER='admin12304',PASS='admin12304';
+let started=false;
+function enter(){
+  $('#login').classList.add('off');$('#app').classList.add('on');
+  if(!started){started=true;depsReady.then(()=>{try{start()}catch(e){console.error(e);$('#msg').textContent='Database not ready: '+(window.StoreError||'store.js could not be found - put it in the main folder next to the invitation')}})}
+}
+function tryLogin(){
+  if($('#lu').value.trim()===USER&&$('#lp').value===PASS){
+    try{sessionStorage.setItem('chk_ok','1')}catch(e){}
+    enter();
+  }else{
+    $('#le').textContent='Wrong username or password.';
+    const b=document.querySelector('.lbox');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');
+  }
+}
+$('#lgo').onclick=tryLogin;
+['#lu','#lp'].forEach(i=>$(i).addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin()}));
+$('#logout').onclick=()=>{try{sessionStorage.removeItem('chk_ok')}catch(e){}location.reload()};
+try{if(sessionStorage.getItem('chk_ok')==='1')enter()}catch(e){}
+</script>
+</body>
+</html>
